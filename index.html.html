@@ -216,22 +216,13 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ── 로컬 스토리지 기반 (서버 없이 동작)
-const STORE_KEY = 'kwnotes_v1';
+// ── API 주소 — Render 배포 후 실제 URL로 교체하세요
+const API = 'https://truth-keyword-notes.onrender.com/api';
+
 let notes = [];
 let viewId = null;
 let editId = null;
 
-function loadNotes() {
-  try { notes = JSON.parse(localStorage.getItem(STORE_KEY)) || []; }
-  catch(e) { notes = []; }
-}
-function saveNotes() {
-  localStorage.setItem(STORE_KEY, JSON.stringify(notes));
-}
-function genId() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-}
 function fmtDate(iso) {
   if(!iso) return '';
   var d = new Date(iso);
@@ -249,9 +240,21 @@ function go(page, id) {
   var nb = document.getElementById('nav-' + page);
   if(nb) nb.classList.add('active');
   window.scrollTo(0,0);
-  loadNotes();
-  if(page === 'list') renderList(notes);
+  if(page === 'list') loadList();
   if(page === 'write') initWrite(id || null);
+}
+
+// ── 목록 로드
+async function loadList() {
+  var el = document.getElementById('kCards');
+  el.innerHTML = '<div class="spinner">불러오는 중...</div>';
+  try {
+    var res = await fetch(API + '/notes');
+    notes = await res.json();
+    renderList(notes);
+  } catch(e) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><p>서버에 연결할 수 없습니다</p></div>';
+  }
 }
 
 // ── 목록 렌더링
@@ -290,7 +293,6 @@ function filterList() {
     el.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><p>검색 결과가 없습니다</p></div>';
     return;
   }
-  // 하이라이트
   el.innerHTML = filtered.map(function(n) {
     var kw = esc(n.keyword||'');
     var preview = esc(n.content||'').slice(0,200);
@@ -327,30 +329,26 @@ function initWrite(id) {
   setTimeout(function(){ document.getElementById('f-keyword').focus(); }, 100);
 }
 
-function saveNote() {
+async function saveNote() {
   var kw = document.getElementById('f-keyword').value.trim();
   var ct = document.getElementById('f-content').value.trim();
   if(!kw) { toast('⚠️ 키워드를 입력해주세요.'); document.getElementById('f-keyword').focus(); return; }
   if(!ct) { toast('⚠️ 내용을 입력해주세요.'); document.getElementById('f-content').focus(); return; }
-  loadNotes();
-  var now = new Date().toISOString();
-  if(editId) {
-    notes = notes.map(function(n) {
-      if(n.id === editId) return Object.assign({}, n, { keyword:kw, content:ct, updatedAt:now });
-      return n;
-    });
-    toast('✓ 수정되었습니다.');
-  } else {
-    notes.unshift({ id:genId(), keyword:kw, content:ct, createdAt:now, updatedAt:now });
-    toast('✓ 저장되었습니다.');
-  }
-  saveNotes();
-  go('list');
+  var payload = { keyword: kw, content: ct };
+  try {
+    if(editId) {
+      await fetch(API + '/notes/' + editId, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+      toast('✓ 수정되었습니다.');
+    } else {
+      await fetch(API + '/notes', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+      toast('✓ 저장되었습니다.');
+    }
+    go('list');
+  } catch(e) { toast('❌ 저장 실패. 서버를 확인해주세요.'); }
 }
 
 // ── 상세보기
 function viewNote(id) {
-  loadNotes();
   var n = notes.find(function(x){ return x.id === id; });
   if(!n) return;
   viewId = id;
@@ -367,29 +365,20 @@ function closeViewDirect() {
   document.getElementById('viewOverlay').classList.remove('on');
   document.body.style.overflow = '';
 }
-function editFromView() {
-  closeViewDirect();
-  go('write', viewId);
-}
-function deleteFromView() {
-  deleteNote(viewId);
-  closeViewDirect();
-}
+function editFromView() { closeViewDirect(); go('write', viewId); }
+function deleteFromView() { deleteNote(viewId); closeViewDirect(); }
 
-// ── 수정 / 삭제
-function editNote(id) {
-  go('write', id);
-}
-function deleteNote(id) {
+function editNote(id) { go('write', id); }
+
+async function deleteNote(id) {
   if(!confirm('삭제하시겠습니까?')) return;
-  loadNotes();
-  notes = notes.filter(function(n){ return n.id !== id; });
-  saveNotes();
-  toast('삭제되었습니다.');
-  renderList(notes);
+  try {
+    await fetch(API + '/notes/' + id, { method:'DELETE' });
+    toast('삭제되었습니다.');
+    await loadList();
+  } catch(e) { toast('❌ 삭제 실패.'); }
 }
 
-// ── 토스트
 function toast(msg) {
   var el = document.getElementById('toast');
   el.textContent = msg;
