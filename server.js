@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
@@ -8,8 +9,10 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// 메모리 저장소 (Render 무료 플랜 — 재시작 시 초기화됨)
-// 영구 저장이 필요하면 SQLite 또는 MongoDB Atlas로 교체 가능
+// ── HTML 정적 파일 서빙
+app.use(express.static(path.join(__dirname, 'public')));
+
+// 메모리 저장소
 let notes = [];
 
 // ── GET /api/notes — 전체 목록
@@ -60,7 +63,9 @@ app.delete('/api/notes/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-// ── Health check
-app.get('/', (req, res) => res.send('진리 키워드 노트 서버 가동 중 ✓'));
+// ── SPA fallback
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
