@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>진리 키워드 노트</title>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet" />
+  <style>
+    :root{
+      --lv:#7C63D4;--lv-lt:#F0ECFF;--lv-mid:#B8A8F0;--lv-dk:#5541B3;--lv-soft:#E8E2FA;
+      --lv-card-bg:#EDE7FB;--lv-card-border:#A896E0;
+      --white:#FFF;--bg:#F8F7FC;--border:#CFC8E8;--border-lt:#EAE6F5;
+      --text-1:#1E1835;--text-2:#433B68;--text-3:#8E86AD;
+      --red:#EF4444;--red-lt:#FEE2E2;
+      --sh:0 2px 14px rgba(90,70,180,.09);--sh-md:0 6px 30px rgba(90,70,180,.16);
+      --r:8px;--r-md:12px;--r-lg:16px;--hh:58px;--ease:.16s ease;
+      --font:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--font);background:var(--bg);color:var(--text-1);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+    button{font-family:var(--font);cursor:pointer;border:none;background:none}
+    input,textarea{font-family:var(--font)}
+    .wrap{max-width:1280px;margin:0 auto;padding:0 36px}
+
+    /* HEADER */
+    .hdr{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--hh);background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);box-shadow:0 1px 4px rgba(100,60,180,.07)}
+    .hdr-inner{max-width:1280px;margin:0 auto;padding:0 36px;height:var(--hh);display:flex;align-items:center;gap:24px}
+    .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:18px;letter-spacing:-.3px;color:var(--text-1);cursor:pointer;flex-shrink:0}
+    .logo-mark{width:28px;height:28px;border-radius:8px;background:var(--lv);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900}
+    .nav{display:flex;gap:2px}
+    .nav-btn{padding:6px 14px;border-radius:var(--r);font-size:14px;font-weight:600;color:var(--text-2);cursor:pointer;transition:var(--ease)}
+    .nav-btn:hover,.nav-btn.active{background:var(--lv-lt);color:var(--lv-dk)}
+
+    /* PAGES */
+    .page{display:none;padding-top:calc(var(--hh) + 36px);padding-bottom:60px;min-height:100vh}
+    .page.on{display:block}
+
+    /* BUTTONS */
+    .btn{display:inline-flex;align-items:center;gap:5px;padding:9px 20px;border-radius:var(--r);font-size:14px;font-weight:700;transition:var(--ease);cursor:pointer;white-space:nowrap}
+    .btn-sm{padding:6px 13px;font-size:13px}
+    .btn-p{background:var(--lv);color:#fff;border:1.5px solid var(--lv)}
+    .btn-p:hover{background:var(--lv-dk);border-color:var(--lv-dk);box-shadow:0 4px 14px rgba(139,92,246,.32);transform:translateY(-1px)}
+    .btn-o{background:transparent;color:var(--lv-dk);border:1.5px solid var(--lv-mid)}
+    .btn-o:hover{background:var(--lv-lt);border-color:var(--lv)}
+    .btn-g{background:transparent;color:var(--text-2);border:1.5px solid transparent}
+    .btn-g:hover{background:var(--border-lt)}
+    .btn-d{background:transparent;color:var(--red);border:1.5px solid #FECACA}
+    .btn-d:hover{background:var(--red-lt)}
+
+    /* FORM ELEMENTS */
+    .fgroup{display:flex;flex-direction:column;gap:6px}
+    .flabel{font-size:13px;font-weight:700;color:var(--text-2)}
+    .flabel .req{color:var(--lv)}
+    .finput{padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--r);font-size:14px;color:var(--text-1);background:var(--white);transition:var(--ease)}
+    .finput:focus{outline:none;border-color:var(--lv);box-shadow:0 0 0 3px rgba(139,92,246,.11)}
+    .finput::placeholder{color:var(--text-3)}
+    textarea.finput{resize:vertical;min-height:180px;line-height:1.7}
+
+    /* SEARCH */
+    .search-row{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+    .search-wrap{position:relative;flex:1;min-width:200px}
+    .search-ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-3);pointer-events:none}
+    .search-inp{width:100%;padding:10px 14px 10px 36px;border:1.5px solid var(--border);border-radius:var(--r);font-size:14px;background:var(--white);color:var(--text-1);transition:var(--ease)}
+    .search-inp:focus{outline:none;border-color:var(--lv);box-shadow:0 0 0 3px rgba(139,92,246,.10)}
+
+    /* CARDS GRID */
+    .k-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .k-card{background:var(--white);border:2px solid var(--border);border-radius:var(--r-md);overflow:hidden;display:flex;flex-direction:column;transition:var(--ease);cursor:pointer}
+    .k-card:hover{box-shadow:var(--sh-md);border-color:var(--lv-mid);transform:translateY(-2px)}
+    .k-card-kw-bar{background:var(--lv-card-bg);border-bottom:1px solid var(--lv-card-border);padding:12px 18px;display:flex;align-items:center}
+    .k-card-kw-text{font-size:14px;font-weight:800;color:var(--lv-dk);letter-spacing:-.2px}
+    .k-card-body{padding:14px 18px 16px;display:flex;flex-direction:column;gap:10px;flex:1}
+    .k-card-content{font-size:13px;color:var(--text-3);line-height:1.65;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;white-space:pre-wrap}
+    .k-card-actions{display:flex;gap:6px;padding-top:10px;border-top:1px solid var(--border-lt);opacity:0;transition:var(--ease);margin-top:auto}
+    .k-card:hover .k-card-actions{opacity:1}
+
+    /* PAGE HEADER */
+    .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:12px;flex-wrap:wrap}
+    .page-title{font-size:24px;font-weight:800;letter-spacing:-.4px}
+    .page-sub{font-size:13px;color:var(--text-3);margin-top:3px}
+    .list-count{font-size:13px;color:var(--text-3);margin-bottom:16px}
+    .list-count strong{color:var(--text-1);font-weight:700}
+
+    /* WRITE PAGE */
+    .write-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden}
+    .write-card-head{padding:14px 22px;background:var(--lv-lt);border-bottom:1px solid var(--lv-soft);font-size:12px;font-weight:800;color:var(--lv-dk);letter-spacing:.05em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+    .write-card-head::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--lv);display:inline-block}
+    .write-card-body{padding:24px 22px;display:flex;flex-direction:column;gap:16px}
+    .form-actions{display:flex;justify-content:flex-end;gap:8px;padding-bottom:4px;margin-top:8px}
+
+    /* MODAL */
+    .overlay{position:fixed;inset:0;z-index:200;background:rgba(18,10,35,.45);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:20px}
+    .overlay.on{display:flex}
+    .modal{background:var(--white);border-radius:var(--r-lg);width:100%;max-width:640px;max-height:88vh;overflow-y:auto;box-shadow:0 16px 60px rgba(100,60,180,.22);animation:popIn .2s ease}
+    @keyframes popIn{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+    .modal-head{padding:22px 24px 16px;border-bottom:1px solid var(--border-lt);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .modal-head-kw{display:flex;align-items:center;gap:8px}
+    .modal-head-hash{color:var(--lv-mid);font-size:20px;font-weight:900}
+    .modal-head-title{font-size:18px;font-weight:800;color:var(--text-1);letter-spacing:-.3px}
+    .modal-close{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text-3);transition:var(--ease);flex-shrink:0}
+    .modal-close:hover{background:var(--border-lt);color:var(--text-1)}
+    .modal-body{padding:22px 24px;display:flex;flex-direction:column;gap:14px}
+    .modal-body-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--lv-dk);margin-bottom:6px}
+    .modal-body-text{font-size:15px;color:var(--text-2);line-height:1.8;white-space:pre-wrap}
+    .modal-meta{font-size:12px;color:var(--text-3);padding:0 24px 6px}
+    .modal-foot{padding:14px 24px;background:var(--bg);border-top:1px solid var(--border-lt);display:flex;justify-content:flex-end;gap:8px}
+
+    /* EMPTY / SPINNER */
+    .empty{grid-column:span 3;text-align:center;padding:60px 20px;color:var(--text-3)}
+    .empty-icon{font-size:40px;margin-bottom:12px}
+    .empty p{font-size:15px;font-weight:600;margin-bottom:6px;color:var(--text-2)}
+    .spinner{grid-column:span 3;text-align:center;padding:48px;color:var(--text-3);font-size:14px}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:24px;right:24px;background:var(--text-1);color:#fff;padding:12px 20px;border-radius:var(--r);font-size:14px;font-weight:500;box-shadow:var(--sh-md);z-index:9999;opacity:0;transform:translateY(12px);pointer-events:none;transition:.2s ease}
+    .toast.on{opacity:1;transform:translateY(0)}
+
+    /* KEYWORD CHIP on CARD */
+    .kw-chip-lg{background:var(--lv-soft);color:var(--lv-dk);padding:4px 12px;border-radius:20px;font-size:13px;font-weight:700;display:inline-block}
+
+    @media(max-width:900px){.k-grid{grid-template-columns:repeat(2,1fr)}.empty,.spinner{grid-column:span 2}}
+    @media(max-width:600px){.wrap{padding:0 16px}.k-grid{grid-template-columns:1fr}.empty,.spinner{grid-column:span 1}.k-card-actions{opacity:1}}
+  </style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="logo" onclick="go('list')">
+      진리 키워드 노트
+    </div>
+    <nav class="nav">
+      <button class="nav-btn" id="nav-list" onclick="go('list')">키워드</button>
+      <button class="nav-btn" id="nav-write" onclick="go('write')">내용 작성</button>
+    </nav>
+  </div>
+</header>
+
+<!-- 키워드 목록 페이지 -->
+<div id="page-list" class="page">
+  <div class="wrap">
+    <div class="page-header">
+      <div>
+        <div class="page-title">키워드</div>
+        <div class="page-sub" id="listSub">저장된 키워드 노트</div>
+      </div>
+      <button class="btn btn-p" onclick="go('write')">+ 내용 작성</button>
+    </div>
+    <div class="search-row">
+      <div class="search-wrap">
+        <span class="search-ic">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </span>
+        <input class="search-inp" id="searchInp" type="text" placeholder="키워드 또는 내용 검색..." oninput="filterList()" />
+      </div>
+    </div>
+    <div class="list-count" id="listCount"></div>
+    <div class="k-grid" id="kCards"><div class="spinner">불러오는 중...</div></div>
+  </div>
+</div>
+
+<!-- 내용 작성 페이지 -->
+<div id="page-write" class="page">
+  <div class="wrap" style="max-width:900px">
+    <div class="page-header">
+      <div class="page-title" id="writePageTitle">내용 작성</div>
+      <button class="btn btn-g" onclick="go('list')">← 목록으로</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="write-card">
+        <div class="write-card-head">키워드 정보</div>
+        <div class="write-card-body">
+          <div class="fgroup">
+            <label class="flabel">키워드 <span class="req">*</span></label>
+            <input class="finput" id="f-keyword" type="text" placeholder="" />
+          </div>
+          <div class="fgroup">
+            <label class="flabel">내용 <span class="req">*</span></label>
+            <textarea class="finput" id="f-content" rows="10" placeholder=""></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-g" onclick="go('list')">취소</button>
+        <button class="btn btn-p" id="saveBtn" onclick="saveNote()">저장하기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 상세보기 모달 -->
+<div class="overlay" id="viewOverlay" onclick="closeView(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-head-kw">
+        <span class="modal-head-hash">#</span>
+        <span class="modal-head-title" id="viewKeyword"></span>
+      </div>
+      <button class="modal-close" onclick="closeViewDirect()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-meta" id="viewDate"></div>
+    <div class="modal-body">
+      <div class="modal-body-label">내용</div>
+      <div class="modal-body-text" id="viewContent"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-g" onclick="closeViewDirect()">닫기</button>
+      <button class="btn btn-o btn-sm" onclick="editFromView()">수정</button>
+      <button class="btn btn-d btn-sm" onclick="deleteFromView()">삭제</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── API 주소 — Render 배포 후 실제 URL로 교체하세요
+const API = '/api';
+
+let notes = [];
+let viewId = null;
+let editId = null;
+
+function fmtDate(iso) {
+  if(!iso) return '';
+  var d = new Date(iso);
+  return d.getFullYear() + '년 ' + (d.getMonth()+1) + '월 ' + d.getDate() + '일';
+}
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── 페이지 전환
+function go(page, id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('on');
+  var nb = document.getElementById('nav-' + page);
+  if(nb) nb.classList.add('active');
+  window.scrollTo(0,0);
+  if(page === 'list') loadList();
+  if(page === 'write') initWrite(id || null);
+}
+
+// ── 목록 로드
+async function loadList() {
+  var el = document.getElementById('kCards');
+  el.innerHTML = '<div class="spinner">불러오는 중...</div>';
+  try {
+    var res = await fetch(API + '/notes');
+    notes = await res.json();
+    renderList(notes);
+  } catch(e) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><p>서버에 연결할 수 없습니다</p></div>';
+  }
+}
+
+// ── 목록 렌더링
+function renderList(data) {
+  var el = document.getElementById('kCards');
+  document.getElementById('listSub').textContent = '저장된 키워드 노트';
+  document.getElementById('listCount').innerHTML = '총 <strong>' + data.length + '</strong>개';
+  if(!data.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📝</div><p>저장된 노트가 없습니다</p><p style="font-size:13px;font-weight:400;margin-top:4px">내용 작성 탭에서 새 키워드를 추가해보세요</p></div>';
+    return;
+  }
+  el.innerHTML = data.map(function(n) {
+    var preview = esc(n.content||'').slice(0,200);
+    return '<div class="k-card" onclick="viewNote(\'' + n.id + '\')">' +
+      '<div class="k-card-kw-bar"><span class="k-card-kw-text">' + esc(n.keyword) + '</span></div>' +
+      '<div class="k-card-body">' +
+        '<div class="k-card-content">' + preview + '</div>' +
+        '<div class="k-card-actions">' +
+          '<button class="btn btn-o btn-sm" onclick="event.stopPropagation();editNote(\'' + n.id + '\')">수정</button>' +
+          '<button class="btn btn-d btn-sm" onclick="event.stopPropagation();deleteNote(\'' + n.id + '\')">삭제</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function filterList() {
+  var q = document.getElementById('searchInp').value.trim().toLowerCase();
+  if(!q) { renderList(notes); return; }
+  var filtered = notes.filter(function(n) {
+    return (n.keyword||'').toLowerCase().includes(q) || (n.content||'').toLowerCase().includes(q);
+  });
+  document.getElementById('listCount').innerHTML = '검색결과 <strong>' + filtered.length + '</strong>개';
+  var el = document.getElementById('kCards');
+  if(!filtered.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><p>검색 결과가 없습니다</p></div>';
+    return;
+  }
+  el.innerHTML = filtered.map(function(n) {
+    var kw = esc(n.keyword||'');
+    var preview = esc(n.content||'').slice(0,200);
+    var re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+    kw = kw.replace(re, '<mark style="background:var(--lv-soft);color:var(--lv-dk);border-radius:3px;padding:0 2px">$1</mark>');
+    preview = preview.replace(re, '<mark style="background:var(--lv-soft);color:var(--lv-dk);border-radius:3px;padding:0 2px">$1</mark>');
+    return '<div class="k-card" onclick="viewNote(\'' + n.id + '\')">' +
+      '<div class="k-card-kw-bar"><span class="k-card-kw-text">' + kw + '</span></div>' +
+      '<div class="k-card-body">' +
+        '<div class="k-card-content">' + preview + '</div>' +
+        '<div class="k-card-actions">' +
+          '<button class="btn btn-o btn-sm" onclick="event.stopPropagation();editNote(\'' + n.id + '\')">수정</button>' +
+          '<button class="btn btn-d btn-sm" onclick="event.stopPropagation();deleteNote(\'' + n.id + '\')">삭제</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+// ── 작성 / 수정
+function initWrite(id) {
+  editId = id || null;
+  document.getElementById('f-keyword').value = '';
+  document.getElementById('f-content').value = '';
+  document.getElementById('writePageTitle').textContent = id ? '내용 수정' : '내용 작성';
+  document.getElementById('saveBtn').textContent = id ? '수정 저장' : '저장하기';
+  if(id) {
+    var n = notes.find(function(x){ return x.id === id; });
+    if(n) {
+      document.getElementById('f-keyword').value = n.keyword || '';
+      document.getElementById('f-content').value = n.content || '';
+    }
+  }
+  setTimeout(function(){ document.getElementById('f-keyword').focus(); }, 100);
+}
+
+async function saveNote() {
+  var kw = document.getElementById('f-keyword').value.trim();
+  var ct = document.getElementById('f-content').value.trim();
+  if(!kw) { toast('⚠️ 키워드를 입력해주세요.'); document.getElementById('f-keyword').focus(); return; }
+  if(!ct) { toast('⚠️ 내용을 입력해주세요.'); document.getElementById('f-content').focus(); return; }
+  var payload = { keyword: kw, content: ct };
+  try {
+    if(editId) {
+      await fetch(API + '/notes/' + editId, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+      toast('✓ 수정되었습니다.');
+    } else {
+      await fetch(API + '/notes', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+      toast('✓ 저장되었습니다.');
+    }
+    go('list');
+  } catch(e) { toast('❌ 저장 실패. 서버를 확인해주세요.'); }
+}
+
+// ── 상세보기
+function viewNote(id) {
+  var n = notes.find(function(x){ return x.id === id; });
+  if(!n) return;
+  viewId = id;
+  document.getElementById('viewKeyword').textContent = n.keyword || '';
+  document.getElementById('viewContent').textContent = n.content || '';
+  document.getElementById('viewDate').textContent = '마지막 수정: ' + fmtDate(n.updatedAt || n.createdAt);
+  document.getElementById('viewOverlay').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function closeView(e) {
+  if(e.target === document.getElementById('viewOverlay')) closeViewDirect();
+}
+function closeViewDirect() {
+  document.getElementById('viewOverlay').classList.remove('on');
+  document.body.style.overflow = '';
+}
+function editFromView() { closeViewDirect(); go('write', viewId); }
+function deleteFromView() { deleteNote(viewId); closeViewDirect(); }
+
+function editNote(id) { go('write', id); }
+
+async function deleteNote(id) {
+  if(!confirm('삭제하시겠습니까?')) return;
+  try {
+    await fetch(API + '/notes/' + id, { method:'DELETE' });
+    toast('삭제되었습니다.');
+    await loadList();
+  } catch(e) { toast('❌ 삭제 실패.'); }
+}
+
+function toast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('on');
+  setTimeout(function(){ el.classList.remove('on'); }, 2200);
+}
+
+window.addEventListener('DOMContentLoaded', function(){ go('list'); });
+</script>
+</body>
+</html>
