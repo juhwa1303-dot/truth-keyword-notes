@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>진리 키워드 노트</title>
+  <title>吏꾨━ ?ㅼ썙???명듃</title>
   <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet" />
   <style>
     :root{
@@ -127,68 +127,68 @@
 <header class="hdr">
   <div class="hdr-inner">
     <div class="logo" onclick="go('list')">
-      진리 키워드 노트
+      吏꾨━ ?ㅼ썙???명듃
     </div>
     <nav class="nav">
-      <button class="nav-btn" id="nav-list" onclick="go('list')">키워드</button>
-      <button class="nav-btn" id="nav-write" onclick="go('write')">내용 작성</button>
+      <button class="nav-btn" id="nav-list" onclick="go('list')">?ㅼ썙??/button>
+      <button class="nav-btn" id="nav-write" onclick="go('write')">?댁슜 ?묒꽦</button>
     </nav>
   </div>
 </header>
 
-<!-- 키워드 목록 페이지 -->
+<!-- ?ㅼ썙??紐⑸줉 ?섏씠吏 -->
 <div id="page-list" class="page">
   <div class="wrap">
     <div class="page-header">
       <div>
-        <div class="page-title">키워드</div>
-        <div class="page-sub" id="listSub">저장된 키워드 노트</div>
+        <div class="page-title">?ㅼ썙??/div>
+        <div class="page-sub" id="listSub">??λ맂 ?ㅼ썙???명듃</div>
       </div>
-      <button class="btn btn-p" onclick="go('write')">+ 내용 작성</button>
+      <button class="btn btn-p" onclick="go('write')">+ ?댁슜 ?묒꽦</button>
     </div>
     <div class="search-row">
       <div class="search-wrap">
         <span class="search-ic">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         </span>
-        <input class="search-inp" id="searchInp" type="text" placeholder="키워드 또는 내용 검색..." oninput="filterList()" />
+        <input class="search-inp" autocomplete="off" id="searchInp" type="text" placeholder="?ㅼ썙???먮뒗 ?댁슜 寃??.." oninput="filterList()" />
       </div>
     </div>
     <div class="list-count" id="listCount"></div>
-    <div class="k-grid" id="kCards"><div class="spinner">불러오는 중...</div></div>
+    <div class="k-grid" id="kCards"><div class="spinner">遺덈윭?ㅻ뒗 以?..</div></div>
   </div>
 </div>
 
-<!-- 내용 작성 페이지 -->
+<!-- ?댁슜 ?묒꽦 ?섏씠吏 -->
 <div id="page-write" class="page">
   <div class="wrap" style="max-width:900px">
     <div class="page-header">
-      <div class="page-title" id="writePageTitle">내용 작성</div>
-      <button class="btn btn-g" onclick="go('list')">← 목록으로</button>
+      <div class="page-title" id="writePageTitle">?댁슜 ?묒꽦</div>
+      <button class="btn btn-g" onclick="go('list')">??紐⑸줉?쇰줈</button>
     </div>
     <div style="display:flex;flex-direction:column;gap:16px">
       <div class="write-card">
-        <div class="write-card-head">키워드 정보</div>
+        <div class="write-card-head">?ㅼ썙???뺣낫</div>
         <div class="write-card-body">
           <div class="fgroup">
-            <label class="flabel">키워드 <span class="req">*</span></label>
-            <input class="finput" id="f-keyword" type="text" placeholder="" />
+            <label class="flabel">?ㅼ썙??<span class="req">*</span></label>
+            <input class="finput" id="f-keyword" autocomplete="off" type="text" placeholder="" />
           </div>
           <div class="fgroup">
-            <label class="flabel">내용 <span class="req">*</span></label>
+            <label class="flabel">?댁슜 <span class="req">*</span></label>
             <textarea class="finput" id="f-content" rows="10" placeholder=""></textarea>
           </div>
         </div>
       </div>
       <div class="form-actions">
-        <button class="btn btn-g" onclick="go('list')">취소</button>
-        <button class="btn btn-p" id="saveBtn" onclick="saveNote()">저장하기</button>
+        <button class="btn btn-g" onclick="go('list')">痍⑥냼</button>
+        <button class="btn btn-p" id="saveBtn" onclick="saveNote()">??ν븯湲?/button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- 상세보기 모달 -->
+<!-- ?곸꽭蹂닿린 紐⑤떖 -->
 <div class="overlay" id="viewOverlay" onclick="closeView(event)">
   <div class="modal">
     <div class="modal-head">
@@ -202,13 +202,13 @@
     </div>
     <div class="modal-meta" id="viewDate"></div>
     <div class="modal-body">
-      <div class="modal-body-label">내용</div>
+      <div class="modal-body-label">?댁슜</div>
       <div class="modal-body-text" id="viewContent"></div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-g" onclick="closeViewDirect()">닫기</button>
-      <button class="btn btn-o btn-sm" onclick="editFromView()">수정</button>
-      <button class="btn btn-d btn-sm" onclick="deleteFromView()">삭제</button>
+      <button class="btn btn-g" onclick="closeViewDirect()">?リ린</button>
+      <button class="btn btn-o btn-sm" onclick="editFromView()">?섏젙</button>
+      <button class="btn btn-d btn-sm" onclick="deleteFromView()">??젣</button>
     </div>
   </div>
 </div>
@@ -216,8 +216,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ── API 주소 — Render 배포 후 실제 URL로 교체하세요
-const API = '/api';
+// ?? API 二쇱냼 ??Render 諛고룷 ???ㅼ젣 URL濡?援먯껜?섏꽭??const API = '/api';
 
 let notes = [];
 let viewId = null;
@@ -226,13 +225,13 @@ let editId = null;
 function fmtDate(iso) {
   if(!iso) return '';
   var d = new Date(iso);
-  return d.getFullYear() + '년 ' + (d.getMonth()+1) + '월 ' + d.getDate() + '일';
+  return d.getFullYear() + '??' + (d.getMonth()+1) + '??' + d.getDate() + '??;
 }
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// ── 페이지 전환
+// ?? ?섏씠吏 ?꾪솚
 function go(page, id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -244,26 +243,25 @@ function go(page, id) {
   if(page === 'write') initWrite(id || null);
 }
 
-// ── 목록 로드
+// ?? 紐⑸줉 濡쒕뱶
 async function loadList() {
   var el = document.getElementById('kCards');
-  el.innerHTML = '<div class="spinner">불러오는 중...</div>';
+  el.innerHTML = '<div class="spinner">遺덈윭?ㅻ뒗 以?..</div>';
   try {
     var res = await fetch(API + '/notes');
     notes = await res.json();
     renderList(notes);
   } catch(e) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div><p>서버에 연결할 수 없습니다</p></div>';
+    el.innerHTML = '<div class="empty"><div class="empty-icon">?좑툘</div><p>?쒕쾭???곌껐?????놁뒿?덈떎</p></div>';
   }
 }
 
-// ── 목록 렌더링
-function renderList(data) {
+// ?? 紐⑸줉 ?뚮뜑留?function renderList(data) {
   var el = document.getElementById('kCards');
-  document.getElementById('listSub').textContent = '저장된 키워드 노트';
-  document.getElementById('listCount').innerHTML = '총 <strong>' + data.length + '</strong>개';
+  document.getElementById('listSub').textContent = '??λ맂 ?ㅼ썙???명듃';
+  document.getElementById('listCount').innerHTML = '珥?<strong>' + data.length + '</strong>媛?;
   if(!data.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">📝</div><p>저장된 노트가 없습니다</p><p style="font-size:13px;font-weight:400;margin-top:4px">내용 작성 탭에서 새 키워드를 추가해보세요</p></div>';
+    el.innerHTML = '<div class="empty"><div class="empty-icon">?뱷</div><p>??λ맂 ?명듃媛 ?놁뒿?덈떎</p><p style="font-size:13px;font-weight:400;margin-top:4px">?댁슜 ?묒꽦 ??뿉?????ㅼ썙?쒕? 異붽??대낫?몄슂</p></div>';
     return;
   }
   el.innerHTML = data.map(function(n) {
@@ -273,8 +271,8 @@ function renderList(data) {
       '<div class="k-card-body">' +
         '<div class="k-card-content">' + preview + '</div>' +
         '<div class="k-card-actions">' +
-          '<button class="btn btn-o btn-sm" onclick="event.stopPropagation();editNote(\'' + n.id + '\')">수정</button>' +
-          '<button class="btn btn-d btn-sm" onclick="event.stopPropagation();deleteNote(\'' + n.id + '\')">삭제</button>' +
+          '<button class="btn btn-o btn-sm" onclick="event.stopPropagation();editNote(\'' + n.id + '\')">?섏젙</button>' +
+          '<button class="btn btn-d btn-sm" onclick="event.stopPropagation();deleteNote(\'' + n.id + '\')">??젣</button>' +
         '</div>' +
       '</div>' +
     '</div>';
@@ -287,10 +285,10 @@ function filterList() {
   var filtered = notes.filter(function(n) {
     return (n.keyword||'').toLowerCase().includes(q) || (n.content||'').toLowerCase().includes(q);
   });
-  document.getElementById('listCount').innerHTML = '검색결과 <strong>' + filtered.length + '</strong>개';
+  document.getElementById('listCount').innerHTML = '寃?됯껐怨?<strong>' + filtered.length + '</strong>媛?;
   var el = document.getElementById('kCards');
   if(!filtered.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><p>검색 결과가 없습니다</p></div>';
+    el.innerHTML = '<div class="empty"><div class="empty-icon">?뵇</div><p>寃??寃곌낵媛 ?놁뒿?덈떎</p></div>';
     return;
   }
   el.innerHTML = filtered.map(function(n) {
@@ -304,21 +302,21 @@ function filterList() {
       '<div class="k-card-body">' +
         '<div class="k-card-content">' + preview + '</div>' +
         '<div class="k-card-actions">' +
-          '<button class="btn btn-o btn-sm" onclick="event.stopPropagation();editNote(\'' + n.id + '\')">수정</button>' +
-          '<button class="btn btn-d btn-sm" onclick="event.stopPropagation();deleteNote(\'' + n.id + '\')">삭제</button>' +
+          '<button class="btn btn-o btn-sm" onclick="event.stopPropagation();editNote(\'' + n.id + '\')">?섏젙</button>' +
+          '<button class="btn btn-d btn-sm" onclick="event.stopPropagation();deleteNote(\'' + n.id + '\')">??젣</button>' +
         '</div>' +
       '</div>' +
     '</div>';
   }).join('');
 }
 
-// ── 작성 / 수정
+// ?? ?묒꽦 / ?섏젙
 function initWrite(id) {
   editId = id || null;
   document.getElementById('f-keyword').value = '';
   document.getElementById('f-content').value = '';
-  document.getElementById('writePageTitle').textContent = id ? '내용 수정' : '내용 작성';
-  document.getElementById('saveBtn').textContent = id ? '수정 저장' : '저장하기';
+  document.getElementById('writePageTitle').textContent = id ? '?댁슜 ?섏젙' : '?댁슜 ?묒꽦';
+  document.getElementById('saveBtn').textContent = id ? '?섏젙 ??? : '??ν븯湲?;
   if(id) {
     var n = notes.find(function(x){ return x.id === id; });
     if(n) {
@@ -332,29 +330,29 @@ function initWrite(id) {
 async function saveNote() {
   var kw = document.getElementById('f-keyword').value.trim();
   var ct = document.getElementById('f-content').value.trim();
-  if(!kw) { toast('⚠️ 키워드를 입력해주세요.'); document.getElementById('f-keyword').focus(); return; }
-  if(!ct) { toast('⚠️ 내용을 입력해주세요.'); document.getElementById('f-content').focus(); return; }
+  if(!kw) { toast('?좑툘 ?ㅼ썙?쒕? ?낅젰?댁＜?몄슂.'); document.getElementById('f-keyword').focus(); return; }
+  if(!ct) { toast('?좑툘 ?댁슜???낅젰?댁＜?몄슂.'); document.getElementById('f-content').focus(); return; }
   var payload = { keyword: kw, content: ct };
   try {
     if(editId) {
       await fetch(API + '/notes/' + editId, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
-      toast('✓ 수정되었습니다.');
+      toast('???섏젙?섏뿀?듬땲??');
     } else {
       await fetch(API + '/notes', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
-      toast('✓ 저장되었습니다.');
+      toast('????λ릺?덉뒿?덈떎.');
     }
     go('list');
-  } catch(e) { toast('❌ 저장 실패. 서버를 확인해주세요.'); }
+  } catch(e) { toast('??????ㅽ뙣. ?쒕쾭瑜??뺤씤?댁＜?몄슂.'); }
 }
 
-// ── 상세보기
+// ?? ?곸꽭蹂닿린
 function viewNote(id) {
   var n = notes.find(function(x){ return x.id === id; });
   if(!n) return;
   viewId = id;
   document.getElementById('viewKeyword').textContent = n.keyword || '';
   document.getElementById('viewContent').textContent = n.content || '';
-  document.getElementById('viewDate').textContent = '마지막 수정: ' + fmtDate(n.updatedAt || n.createdAt);
+  document.getElementById('viewDate').textContent = '留덉?留??섏젙: ' + fmtDate(n.updatedAt || n.createdAt);
   document.getElementById('viewOverlay').classList.add('on');
   document.body.style.overflow = 'hidden';
 }
@@ -371,12 +369,12 @@ function deleteFromView() { deleteNote(viewId); closeViewDirect(); }
 function editNote(id) { go('write', id); }
 
 async function deleteNote(id) {
-  if(!confirm('삭제하시겠습니까?')) return;
+  if(!confirm('??젣?섏떆寃좎뒿?덇퉴?')) return;
   try {
     await fetch(API + '/notes/' + id, { method:'DELETE' });
-    toast('삭제되었습니다.');
+    toast('??젣?섏뿀?듬땲??');
     await loadList();
-  } catch(e) { toast('❌ 삭제 실패.'); }
+  } catch(e) { toast('????젣 ?ㅽ뙣.'); }
 }
 
 function toast(msg) {
