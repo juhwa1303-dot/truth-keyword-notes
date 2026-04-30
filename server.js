@@ -1,71 +1,68 @@
-const express = require('express');
+﻿const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const MONGO_URI = process.env.MONGO_URI;
+const client = new MongoClient(MONGO_URI, { serverApi: { version: ServerApiVersion.v1, strict: true, deprecationErrors: true } });
+
+let db;
+async function connectDB() {
+  await client.connect();
+  db = client.db('keyword_notes');
+  console.log('MongoDB 연결 성공 ✓');
+}
 
 app.use(cors());
 app.use(express.json());
-
-// ── HTML 정적 파일 서빙
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 메모리 저장소
-let notes = [];
-
-// ── GET /api/notes — 전체 목록
-app.get('/api/notes', (req, res) => {
-  res.json(notes);
+app.get('/api/notes', async (req, res) => {
+  try { const notes = await db.collection('notes').find().sort({ createdAt: -1 }).toArray(); res.json(notes); }
+  catch(e) { res.status(500).json({ error: '불러오기 실패' }); }
 });
 
-// ── POST /api/notes — 새 노트 저장
-app.post('/api/notes', (req, res) => {
+app.post('/api/notes', async (req, res) => {
   const { keyword, content } = req.body;
-  if (!keyword || !keyword.trim()) {
-    return res.status(400).json({ error: '키워드를 입력해주세요.' });
-  }
+  if (!keyword || !keyword.trim()) return res.status(400).json({ error: '키워드를 입력해주세요.' });
   const now = new Date().toISOString();
-  const note = {
-    id: uuidv4(),
-    keyword: keyword.trim(),
-    content: (content || '').trim(),
-    createdAt: now,
-    updatedAt: now
-  };
-  notes.unshift(note);
-  res.status(201).json(note);
+  const note = { id: uuidv4(), keyword: keyword.trim(), content: (content||'').trim(), createdAt: now, updatedAt: now };
+  try { await db.collection('notes').insertOne(note); res.status(201).json(note); }
+  catch(e) { res.status(500).json({ error: '저장 실패' }); }
 });
 
-// ── PUT /api/notes/:id — 수정
-app.put('/api/notes/:id', (req, res) => {
+app.put('/api/notes/:id', async (req, res) => {
   const { keyword, content } = req.body;
-  const idx = notes.findIndex(n => n.id === req.params.id);
-  if (idx === -1) return res.status(404).json({ error: '노트를 찾을 수 없습니다.' });
-  if (!keyword || !keyword.trim()) {
-    return res.status(400).json({ error: '키워드를 입력해주세요.' });
-  }
-  notes[idx] = {
-    ...notes[idx],
-    keyword: keyword.trim(),
-    content: (content || '').trim(),
-    updatedAt: new Date().toISOString()
-  };
-  res.json(notes[idx]);
+  if (!keyword || !keyword.trim()) return res.status(400).json({ error: '키워드를 입력해주세요.' });
+  try {
+    const result = await db.collection('notes').findOneAndUpdate(
+      { id: req.params.id },
+      { $set: { keyword: keyword.trim(), content: (content||'').trim(), updatedAt: new Date().toISOString() } },
+      { returnDocument: 'after' }
+    );
+    if (!result) return res.status(404).json({ error: '노트를 찾을 수 없습니다.' });
+    res.json(result);
+  } catch(e) { res.status(500).json({ error: '수정 실패' }); }
 });
 
-// ── DELETE /api/notes/:id — 삭제
-app.delete('/api/notes/:id', (req, res) => {
-  const before = notes.length;
-  notes = notes.filter(n => n.id !== req.params.id);
-  if (notes.length === before) return res.status(404).json({ error: '노트를 찾을 수 없습니다.' });
-  res.json({ ok: true });
+app.delete('/api/notes/:id', async (req, res) => {
+  try {
+    const result = await db.collection('notes').deleteOne({ id: req.params.id });
+    if (result.deletedCount === 0) return res.status(404).json({ error: '노트를 찾을 수 없습니다.' });
+    res.json({ ok: true });
+  } catch(e) { res.status(500).json({ error: '삭제 실패' }); }
 });
 
-// ── SPA fallback
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+connectDB().then(() => {
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}).catch(err => {
+  console.error('MongoDB 연결 실패:', err);
+  process.exit(1);
+});
