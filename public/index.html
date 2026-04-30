@@ -240,8 +240,25 @@ function go(page, id) {
   var nb = document.getElementById('nav-' + page);
   if(nb) nb.classList.add('active');
   window.scrollTo(0,0);
+  var hash = '#' + page + (id ? '/' + id : '');
+  if(window.location.hash !== hash) history.pushState(null, '', hash);
   if(page === 'list') loadList();
   if(page === 'write') initWrite(id || null);
+}
+
+function routeFromHash() {
+  var hash = window.location.hash.replace('#', '') || 'list';
+  var parts = hash.split('/');
+  var page = parts[0];
+  var id = parts[1] || null;
+  if(page !== 'list' && page !== 'write') page = 'list';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('on');
+  var nb = document.getElementById('nav-' + page);
+  if(nb) nb.classList.add('active');
+  if(page === 'list') loadList();
+  if(page === 'write') initWrite(id);
 }
 
 // ── 목록 로드
@@ -386,7 +403,8 @@ function toast(msg) {
   setTimeout(function(){ el.classList.remove('on'); }, 2200);
 }
 
-window.addEventListener('DOMContentLoaded', function(){ go('list'); });
+window.addEventListener('DOMContentLoaded', routeFromHash);
+window.addEventListener('popstate', routeFromHash);
 </script>
 </body>
 </html>
